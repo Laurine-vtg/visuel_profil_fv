@@ -63,6 +63,7 @@ if afficher_etiquettes:
 st.pyplot(fig1)
 st.text("Les valeurs utilisées pour définir les quadrants sont les valeurs moyennes")
 st.text("trouvées dans la littérature pour des joueurs de foot pro.")
+st.text("F0 = 7.7 N/kg & V0 = 9.2 m/s")
 
 st.subheader("Graphique en nuage de points des données individuelles de V0 et de F0")
 # Liste de tous les noms/prénoms (sans doublons)
