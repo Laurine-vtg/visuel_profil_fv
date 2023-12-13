@@ -4,7 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Charger les données à partir du fichier Excel
-data = pd.read_excel("data F-V.xlsx")
+
+uploaded_file = st.file_uploader("Choisissez le fichier Excel 'Data F-V'", type="xlsx")
+if uploaded_file is not None:
+    data = pd.read_excel(uploaded_file, decimal='.')
+else:
+    st.warning("Veuillez charger un fichier Excel 'Data F-V'.")
 
 st.title("Interprétation des profils F-V")
 st.subheader("Graphique en quadrants des qualités de V0 et de F0 des joueurs par équipe et/ou par poste")
