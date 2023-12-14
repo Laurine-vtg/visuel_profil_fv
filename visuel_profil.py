@@ -13,6 +13,7 @@ else:
 
 st.title("Interprétation des profils F-V")
 st.subheader("Graphique en quadrants des qualités de V0 et de F0 des joueurs par équipe et/ou par poste")
+
 # Filtrer par équipe et poste
 equipes_selectionnees = st.multiselect('Sélectionnez les équipes', data['Equipes'].unique())
 if equipes_selectionnees:
@@ -22,6 +23,15 @@ postes_selectionnes = st.multiselect('Sélectionnez les postes', data['Poste'].u
 if postes_selectionnes:
     data = data[data['Poste'].isin(postes_selectionnes)]
 
+# Filtrer par numéro de sprint
+num_sprint_selectionne = st.multiselect('Sélectionnez le numéro de sprint', options=data['Num Sprint'].unique())
+if num_sprint_selectionne:
+    data = data[data['Num Sprint'].isin(num_sprint_selectionne)]
+
+date_test = st.multiselect('Sélectionnez la date du test', options=data['Date du test'].unique())
+if date_test:
+    data=data[data['Date du test'].isin(date_test)]
+
 # Valeurs prédéfinies pour F0 et V0
 F0_predit = 7.7
 V0_predit = 9.2
@@ -30,6 +40,10 @@ V0_predit = 9.2
 V0 = data["V0 (m/s)"]
 F0 = data["F0 (N/kg)"]
 noms = data["NOM Prénom"]
+
+nom = data["NOM"]
+
+
 
 # Créer un premier graphique avec 4 quadrants basés sur les valeurs prédéfinies
 fig1, ax1 = plt.subplots()
@@ -61,8 +75,8 @@ ax1.set_ylabel('F0 (N/kg)')
 # Ajouter des étiquettes pour chaque point avec les noms des joueurs
 afficher_etiquettes = st.checkbox("Afficher les étiquettes des noms des joueurs sur le graphique 1", value=True)
 if afficher_etiquettes:
-    for nom, x, y in zip(noms, V0, F0):
-        ax1.annotate(nom, (x, y), textcoords="offset points", xytext=(0, 5), ha='center')
+    for nom, x, y in zip(nom, V0, F0):
+        ax1.annotate(nom, (x, y), textcoords="offset points", xytext=(0, 5), ha='center', fontsize=5)
 
 # Afficher le premier graphique dans Streamlit
 st.pyplot(fig1)
@@ -71,11 +85,24 @@ st.text("trouvées dans la littérature pour des joueurs de foot pro.")
 st.text("F0 = 7.7 N/kg & V0 = 9.2 m/s")
 
 st.subheader("Graphique en nuage de points des données individuelles de V0 et de F0")
+
 # Liste de tous les noms/prénoms (sans doublons)
 options_nom_prenom = data['NOM Prénom'].drop_duplicates().tolist()
 
 # Afficher la liste déroulante avec toutes les options
 nom_prenom_selectionne = st.multiselect("Sélectionnez un NOM Prénom", options=options_nom_prenom)
+
+#filtre numéro de sprint
+options_num_sprint = data ['Num Sprint'].drop_duplicates().to_list()
+num_sprint = st.multiselect('Sélectionnez un numéro de sprint', options=options_num_sprint)
+if num_sprint:
+    data=data[data['Num Sprint'].isin(num_sprint)]
+
+#filtre date du test
+option_date_test = data ['Date du test'].drop_duplicates().to_list()
+date_test2 = st.multiselect('Sélectionnez la date du test', options = option_date_test)
+if date_test2:
+    data=data[data['Date du test'].isin(date_test2)]
 
 # Créer un deuxième graphique en nuage de points
 if nom_prenom_selectionne:
@@ -91,6 +118,10 @@ if nom_prenom_selectionne:
 
     # Nuage de points
     ax2.scatter(V0_selectionne, F0_selectionne, label='Profil F-V')
+
+# Ajouter des lignes pointillées pour délimiter les quadrants
+    ax2.axhline(F0_predit, linestyle='--', color='gray', label='Limite F0')
+    ax2.axvline(V0_predit, linestyle='--', color='gray', label='Limite V0')
 
     # Ajouter des étiquettes d'axes
     ax2.set_xlabel('V0 (m/s)')
@@ -144,10 +175,11 @@ def main():
     selected_players = st.multiselect('Sélectionnez des joueurs', options=players_without_duplicates)
 
     # Liste déroulante pour sélectionner une date
-    selected_date = st.selectbox('Sélectionnez une date', options=data['Date du test'].drop_duplicates())
+    selected_date = st.selectbox('Sélectionnez la date du test', options=data['Date du test'].drop_duplicates())
 
     # Liste déroulante pour sélectionner un numéro de sprint
     selected_sprint = st.selectbox('Sélectionnez un numéro de sprint', options=data['Num Sprint'].drop_duplicates())
+
 
     if selected_players and selected_date and selected_sprint:
         # Convertir la colonne 'Date du test' en type datetime si elle ne l'est pas déjà
