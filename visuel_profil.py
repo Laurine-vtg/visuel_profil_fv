@@ -87,27 +87,27 @@ st.text("F0 = 7.7 N/kg & V0 = 9.2 m/s")
 st.subheader("Graphique en nuage de points des données individuelles de V0 et de F0")
 
 # Liste de tous les noms/prénoms (sans doublons)
-options_nom_prenom = data['NOM Prénom'].drop_duplicates().tolist()
+options_nom_prenom = data['NOM'].drop_duplicates().tolist()
 
 # Afficher la liste déroulante avec toutes les options
 nom_prenom_selectionne = st.multiselect("Sélectionnez un NOM Prénom", options=options_nom_prenom)
 
 #filtre numéro de sprint
-options_num_sprint = data ['Num Sprint'].drop_duplicates().to_list()
-num_sprint = st.multiselect('Sélectionnez un numéro de sprint', options=options_num_sprint)
-if num_sprint:
-    data=data[data['Num Sprint'].isin(num_sprint)]
+#options_num_sprint = data ['Num Sprint'].drop_duplicates().to_list()
+#num_sprint = st.multiselect('Sélectionnez un numéro de sprint', options=options_num_sprint)
+#if num_sprint:
+#    data=data[data['Num Sprint'].isin(num_sprint)]
 
 #filtre date du test
-option_date_test = data ['Date du test'].drop_duplicates().to_list()
-date_test_select = st.multiselect('Sélectionnez la date du test', options = option_date_test, key="date_test_select_unique_key")
-if date_test_select:
-    data=data[data['Date du test'].isin(date_test_select)]
+#option_date_test = data ['Date du test'].drop_duplicates().to_list()
+#date_test_select = st.multiselect('Sélectionnez la date du test', options = option_date_test, key="date_test_select_unique_key")
+#if date_test_select:
+#    data=data[data['Date du test'].isin(date_test_select)]
 
 # Créer un deuxième graphique en nuage de points
 if nom_prenom_selectionne:
     # Filtrer les données en fonction de la sélection
-    data_selectionnee = data[data['NOM Prénom'].isin(nom_prenom_selectionne)]
+    data_selectionnee = data[data['NOM'].isin(nom_prenom_selectionne)]
     
     # Extraire les colonnes V0, F0 et "NOM Prénom" pour le deuxième graphique
     V0_selectionne = data_selectionnee["V0 (m/s)"]
@@ -171,22 +171,22 @@ def main():
     st.subheader('Relation Force-Vitesse')
 
     # Liste déroulante pour sélectionner des joueurs
-    players_without_duplicates = data['NOM'].drop_duplicates()
-    selected_players = st.multiselect('Sélectionnez des joueurs', options=players_without_duplicates)
+    #players_without_duplicates = data['NOM'].drop_duplicates()
+    #selected_players = st.multiselect('Sélectionnez des joueurs', options=players_without_duplicates)
 
     # Liste déroulante pour sélectionner une date
-    selected_date = st.selectbox('Sélectionnez la date du test', options=data['Date du test'].drop_duplicates())
+    #selected_date = st.selectbox('Sélectionnez la date du test', options=data['Date du test'].drop_duplicates())
 
     # Liste déroulante pour sélectionner un numéro de sprint
-    selected_sprint = st.selectbox('Sélectionnez un numéro de sprint', options=data['Num Sprint'].drop_duplicates())
+    #selected_sprint = st.selectbox('Sélectionnez un numéro de sprint', options=data['Num Sprint'].drop_duplicates())
 
 
-    if selected_players and selected_date and selected_sprint:
+    if nom_prenom_selectionne: # and selected_date and selected_sprint:
         # Convertir la colonne 'Date du test' en type datetime si elle ne l'est pas déjà
         data['Date du test'] = pd.to_datetime(data['Date du test'])
 
         # Filtrer les données en fonction des sélections
-        selected_data = data[(data['NOM'].isin(selected_players)) & (data['Date du test'] == selected_date) & (data['Num Sprint'] == selected_sprint)]
+        selected_data = data[(data['NOM'].isin(nom_prenom_selectionne))]# & (data['Date du test'] == selected_date) & (data['Num Sprint'] == selected_sprint)]
 
         # Créer une seule figure pour tous les joueurs sélectionnés
         fig, ax = plt.subplots()
@@ -226,7 +226,7 @@ def force_velocity_graph(player_data, ax):
     player_line = {
         'x': x_line,
         'y': y_line,
-        'label': player_data['NOM Prénom'] 
+        'label': player_data['NOM'] 
     }
 
     return [player_line]
