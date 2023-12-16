@@ -112,7 +112,7 @@ if nom_prenom_selectionne:
     # Extraire les colonnes V0, F0 et "NOM Prénom" pour le deuxième graphique
     V0_selectionne = data_selectionnee["V0 (m/s)"]
     F0_selectionne = data_selectionnee["F0 (N/kg)"]
-    noms_selectionne = data_selectionnee["NOM Prénom"]
+    noms_selectionne = data_selectionnee["NOM"]
 
     fig2, ax2 = plt.subplots()
 
@@ -171,7 +171,7 @@ def main():
     st.subheader('Relation Force-Vitesse')
 
     # Liste déroulante pour sélectionner des joueurs
-    players_without_duplicates = data['NOM Prénom'].drop_duplicates()
+    players_without_duplicates = data['NOM'].drop_duplicates()
     selected_players = st.multiselect('Sélectionnez des joueurs', options=players_without_duplicates)
 
     # Liste déroulante pour sélectionner une date
@@ -186,7 +186,7 @@ def main():
         data['Date du test'] = pd.to_datetime(data['Date du test'])
 
         # Filtrer les données en fonction des sélections
-        selected_data = data[(data['NOM Prénom'].isin(selected_players)) & (data['Date du test'] == selected_date) & (data['Num Sprint'] == selected_sprint)]
+        selected_data = data[(data['NOM'].isin(selected_players)) & (data['Date du test'] == selected_date) & (data['Num Sprint'] == selected_sprint)]
 
         # Créer une seule figure pour tous les joueurs sélectionnés
         fig, ax = plt.subplots()
@@ -204,7 +204,7 @@ def main():
 
         # Tracer toutes les courbes en une seule fois
         for line in lines:
-            ax.plot(line['x'], line['y'], 'o-', label=line['label'])
+            ax.plot(line['x'], line['y'], '-', label=line['label'])
 
         ax.legend()
 
