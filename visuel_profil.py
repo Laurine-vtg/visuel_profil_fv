@@ -100,9 +100,9 @@ if num_sprint:
 
 #filtre date du test
 option_date_test = data ['Date du test'].drop_duplicates().to_list()
-date_test2 = st.multiselect('Sélectionnez la date du test', options = option_date_test)
-if date_test2:
-    data=data[data['Date du test'].isin(date_test2)]
+date_test_select = st.multiselect('Sélectionnez la date du test', options = option_date_test)
+if date_test_select:
+    data=data[data['Date du test'].isin(date_test_select)]
 
 # Créer un deuxième graphique en nuage de points
 if nom_prenom_selectionne:
